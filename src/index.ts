@@ -61,13 +61,7 @@ export const beautifier: Beautifier = {
       homepageUrl: "https://clang.llvm.org/docs/ClangFormat.html",
       installationUrl: "https://clang.llvm.org/docs/ClangFormat.html",
       bugsUrl: "https://clang.llvm.org/docs/ClangFormat.html",
-      badges: [
-        {
-          description: "",
-          url: "",
-          href: "",
-        },
-      ],
+      badges: [],
     },
   ],
   resolveConfig: ({ filePath, projectPath }) => {
@@ -91,37 +85,23 @@ export const beautifier: Beautifier = {
     beautifierConfig,
   }: BeautifierBeautifyData) {
     const clangFormat = dependencies.get<ExecutableDependency>("clang-format");
-    const basePath: string = os.tmpdir();
-    let fileExtension;
-    if (filePath) {
-      fileExtension = path.extname(filePath);
-    }
     const config =
       beautifierConfig && beautifierConfig.filePath
         ? `--style=${beautifierConfig.filePath}`
         : "";
     // tslint:disable-next-line no-console
     console.log(`Using config: ${config}`);
-    return tmpFile({ postfix: fileExtension }).then(filePath =>
-      writeFile(filePath, text).then(() =>
-        clangFormat
-          .run({
-            args: relativizePaths(
-              ["-style=file", `-assume-filename=${filePath}`, "-i", filePath],
-              basePath
-            ),
-            options: {
-              cwd: basePath,
-            },
-          })
-          .then(({ exitCode, stderr }) => {
-            if (exitCode) {
-              return Promise.reject(stderr);
-            }
-            return readFile(filePath);
-          })
-      )
-    );
+    return clangFormat
+    .run({
+      args: [`-assume-filename=${filePath}`],
+      stdin: text,
+    })
+    .then(({ exitCode, stderr, stdout }) => {
+      if (exitCode) {
+        return Promise.reject(stderr);
+      }
+      return Promise.resolve(stdout);
+    });
   },
 };
 
@@ -155,57 +135,15 @@ function doesFileExist(filePath: string): Promise<boolean> {
   });
 }
 
-function tmpFile(options: tmp.Options): Promise<string> {
-  return new Promise<string>((resolve, reject) =>
-    tmp.file(
-      {
-        prefix: "unibeautify-",
-        ...options,
-      },
-      (err, path, fd) => {
-        if (err) {
-          return reject(err);
-        }
-        return resolve(path);
-      }
-    )
-  );
-}
-
-function writeFile(filePath: string, contents: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    fs.writeFile(filePath, contents, error => {
-      if (error) {
-        return reject(error);
-      }
-      return resolve();
-    });
-  });
-}
-
-function readFile(filePath: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    fs.readFile(filePath, (error, data) => {
-      if (error) {
-        return reject(error);
-      }
-      return resolve(data.toString());
-    });
-  });
-}
-
-function relativizePaths(args: string[], basePath: string): string[] {
-  return args.map(arg => {
-    const isTmpFile =
-      typeof arg === "string" &&
-      !arg.includes(":") &&
-      path.isAbsolute(arg) &&
-      path.dirname(arg).startsWith(basePath);
-    if (isTmpFile) {
-      return path.relative(basePath, arg);
-    }
-    return arg;
-  });
-}
+// function readFile(filePath: string): Promise<string> {
+//   return new Promise((resolve, reject) => {
+//     fs.readFile(filePath, (error, data) => {
+//       if (error) {
+//         return reject(error);
+//       }
+//       return resolve(data.toString());
+//     });
+//   });
+// }
 
 export default beautifier;
