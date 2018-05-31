@@ -92,18 +92,22 @@ export const beautifier: Beautifier = {
   }: BeautifierBeautifyData) {
     const clangFormat = dependencies.get<ExecutableDependency>("clang-format");
     const basePath: string = os.tmpdir();
+    let fileExtension;
+    if (filePath) {
+      fileExtension = path.extname(filePath);
+    }
     const config =
       beautifierConfig && beautifierConfig.filePath
         ? `--style=${beautifierConfig.filePath}`
         : "";
     // tslint:disable-next-line no-console
     console.log(`Using config: ${config}`);
-    return tmpFile({ postfix: ".c" }).then(filePath =>
+    return tmpFile({ postfix: fileExtension }).then(filePath =>
       writeFile(filePath, text).then(() =>
         clangFormat
           .run({
             args: relativizePaths(
-              [config, `-assume-filename=${filePath}`, "-i", filePath],
+              ["-style=file", `-assume-filename=${filePath}`, "-i", filePath],
               basePath
             ),
             options: {
