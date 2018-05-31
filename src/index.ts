@@ -4,12 +4,14 @@ import {
   BeautifierBeautifyData,
   DependencyType,
   ExecutableDependency,
+  ResolvedConfig
 } from "unibeautify";
 import * as readPkgUp from "read-pkg-up";
 import * as tmp from "tmp";
 import * as fs from "fs";
 import * as path from "path";
 import * as os from "os";
+import cosmiconfig, { ExplorerOptions } from "cosmiconfig";
 
 const { pkg } = readPkgUp.sync({ cwd: __dirname });
 
@@ -85,22 +87,21 @@ export const beautifier: Beautifier = {
     beautifierConfig,
   }: BeautifierBeautifyData) {
     const clangFormat = dependencies.get<ExecutableDependency>("clang-format");
-    const config =
-      beautifierConfig && beautifierConfig.filePath
-        ? `--style=${beautifierConfig.filePath}`
-        : "";
-    // tslint:disable-next-line no-console
-    console.log(`Using config: ${config}`);
-    return clangFormat
-    .run({
-      args: [`-assume-filename=${filePath}`],
-      stdin: text,
-    })
-    .then(({ exitCode, stderr, stdout }) => {
-      if (exitCode) {
-        return Promise.reject(stderr);
-      }
-      return Promise.resolve(stdout);
+    return generateConfigArgs(beautifierConfig)
+    .then(configArgs => {
+      // tslint:disable-next-line no-console
+      console.log(`Using config: ${configArgs}`);
+      return clangFormat
+      .run({
+        args: [`-assume-filename=${filePath}`, ...configArgs],
+        stdin: text,
+      })
+      .then(({ exitCode, stderr, stdout }) => {
+        if (exitCode) {
+          return Promise.reject(stderr);
+        }
+        return Promise.resolve(stdout);
+      });
     });
   },
 };
@@ -135,15 +136,28 @@ function doesFileExist(filePath: string): Promise<boolean> {
   });
 }
 
-// function readFile(filePath: string): Promise<string> {
-//   return new Promise((resolve, reject) => {
-//     fs.readFile(filePath, (error, data) => {
-//       if (error) {
-//         return reject(error);
-//       }
-//       return resolve(data.toString());
-//     });
-//   });
-// }
+function generateConfigArgs(beautifierConfig?: ResolvedConfig): Promise<string[]> {
+  if (beautifierConfig && beautifierConfig.filePath) {
+    return loadConfigurationFromFile(beautifierConfig.filePath)
+    .then((config: string) => {
+      return [`-style=${config}`];
+    });
+  }
+  return Promise.resolve(["-style=file"]);
+}
+
+function loadConfigurationFromFile(filePath: string): Promise<string | undefined> {
+    const configExplorer = cosmiconfig("", {});
+    return configExplorer
+    .load(filePath)
+    .then(result => {
+      if (result) {
+        return JSON.stringify(result.config);
+      }
+    })
+    .catch(error => {
+      return Promise.reject(error);
+    });
+}
 
 export default beautifier;
