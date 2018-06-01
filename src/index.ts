@@ -1,17 +1,14 @@
 import {
   Beautifier,
-  Language,
   BeautifierBeautifyData,
   DependencyType,
   ExecutableDependency,
   ResolvedConfig
 } from "unibeautify";
 import * as readPkgUp from "read-pkg-up";
-import * as tmp from "tmp";
 import * as fs from "fs";
 import * as path from "path";
-import * as os from "os";
-import cosmiconfig, { ExplorerOptions } from "cosmiconfig";
+import cosmiconfig from "cosmiconfig";
 
 const { pkg } = readPkgUp.sync({ cwd: __dirname });
 
