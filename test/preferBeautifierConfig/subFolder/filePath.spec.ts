@@ -18,7 +18,7 @@ test(`should successfully beautify file with config in the same directory`, () =
       languageName: "C",
       options: {
         "C": {
-          "clang-format": {
+          "ClangFormat": {
             prefer_beautifier_config: true
           }
         } as any,

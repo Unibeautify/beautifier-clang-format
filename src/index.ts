@@ -13,7 +13,7 @@ import cosmiconfig from "cosmiconfig";
 const { pkg } = readPkgUp.sync({ cwd: __dirname });
 
 export const beautifier: Beautifier = {
-  name: "clang-format",
+  name: "ClangFormat",
   package: pkg,
   badges: [
     {
@@ -54,7 +54,7 @@ export const beautifier: Beautifier = {
   dependencies: [
     {
       type: DependencyType.Executable,
-      name: "clang-format",
+      name: "ClangFormat",
       program: "clang-format",
       parseVersion: [/clang-format version (\d+\.\d+\.\d+)/],
       homepageUrl: "https://clang.llvm.org/docs/ClangFormat.html",
@@ -83,7 +83,7 @@ export const beautifier: Beautifier = {
     filePath,
     beautifierConfig,
   }: BeautifierBeautifyData) {
-    const clangFormat = dependencies.get<ExecutableDependency>("clang-format");
+    const clangFormat = dependencies.get<ExecutableDependency>("ClangFormat");
     return generateConfigArgs(beautifierConfig)
     .then(configArgs => {
       // tslint:disable-next-line no-console

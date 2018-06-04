@@ -18,7 +18,7 @@ import { raw } from "@test/utils";
       languageName: "C",
       options: {
         "C": {
-          "clang-format": {
+          "ClangFormat": {
             prefer_beautifier_config: true
           }
         } as any,
