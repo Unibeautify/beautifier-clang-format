@@ -1,6 +1,6 @@
 # beautifier-clang-format
 
-> clang-format beautifier for Unibeautify
+> ClangFormat beautifier for Unibeautify
 
 ## Installation
 

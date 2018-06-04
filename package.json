@@ -1,7 +1,7 @@
 {
   "name": "@unibeautify/beautifier-clang-format",
   "version": "0.1.0",
-  "description": "clang-format beautifier for Unibeautify",
+  "description": "ClangFormat beautifier for Unibeautify",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
   "scripts": {
@@ -19,6 +19,7 @@
   },
   "keywords": [
     "clang-format",
+    "clangformat",
     "unibeautify",
     "beautifier"
   ],
