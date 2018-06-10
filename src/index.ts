@@ -3,7 +3,7 @@ import {
   BeautifierBeautifyData,
   DependencyType,
   ExecutableDependency,
-  ResolvedConfig
+  ResolvedConfig,
 } from "unibeautify";
 import * as readPkgUp from "read-pkg-up";
 import * as fs from "fs";
@@ -46,10 +46,11 @@ export const beautifier: Beautifier = {
     },
   ],
   options: {
+    // unibeautify:ignore-next-line
     "C": true,
     "C++": true,
     Java: true,
-    "Objective-C": true
+    "Objective-C": true,
   },
   dependencies: [
     {
@@ -84,21 +85,20 @@ export const beautifier: Beautifier = {
     beautifierConfig,
   }: BeautifierBeautifyData) {
     const clangFormat = dependencies.get<ExecutableDependency>("ClangFormat");
-    return generateConfigArgs(beautifierConfig)
-    .then(configArgs => {
+    return generateConfigArgs(beautifierConfig).then(configArgs => {
       // tslint:disable-next-line no-console
       console.log(`Using config: ${configArgs}`);
       return clangFormat
-      .run({
-        args: [`-assume-filename=${filePath}`, ...configArgs],
-        stdin: text,
-      })
-      .then(({ exitCode, stderr, stdout }) => {
-        if (exitCode) {
-          return Promise.reject(stderr);
-        }
-        return Promise.resolve(stdout);
-      });
+        .run({
+          args: [`-assume-filename=${filePath}`, ...configArgs],
+          stdin: text,
+        })
+        .then(({ exitCode, stderr, stdout }) => {
+          if (exitCode) {
+            return Promise.reject(stderr);
+          }
+          return Promise.resolve(stdout);
+        });
     });
   },
 };
@@ -133,19 +133,24 @@ function doesFileExist(filePath: string): Promise<boolean> {
   });
 }
 
-function generateConfigArgs(beautifierConfig?: ResolvedConfig): Promise<string[]> {
+function generateConfigArgs(
+  beautifierConfig?: ResolvedConfig
+): Promise<string[]> {
   if (beautifierConfig && beautifierConfig.filePath) {
-    return loadConfigurationFromFile(beautifierConfig.filePath)
-    .then((config: string) => {
-      return [`-style=${config}`];
-    });
+    return loadConfigurationFromFile(beautifierConfig.filePath).then(
+      (config: string) => {
+        return [`-style=${config}`];
+      }
+    );
   }
   return Promise.resolve(["-style=file"]);
 }
 
-function loadConfigurationFromFile(filePath: string): Promise<string | undefined> {
-    const configExplorer = cosmiconfig("", {});
-    return configExplorer
+function loadConfigurationFromFile(
+  filePath: string
+): Promise<string | undefined> {
+  const configExplorer = cosmiconfig("", {});
+  return configExplorer
     .load(filePath)
     .then(result => {
       if (result) {

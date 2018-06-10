@@ -16,10 +16,11 @@ test(`should successfully beautify file test1.c`, () => {
     .beautify({
       languageName: "C",
       options: {
+        // unibeautify:ignore-next-line
         "C": {},
       },
       text,
-      filePath
+      filePath,
     })
     .then(results => {
       expect(raw(results)).toMatchSnapshot();
