@@ -74,7 +74,7 @@ export const beautifier: Beautifier = {
       .then(configFile => ({ filePath: configFile }))
       .catch(err => {
         // tslint:disable-next-line no-console
-        console.log(err);
+        console.error(err);
         return Promise.resolve({});
       });
   },
@@ -87,7 +87,7 @@ export const beautifier: Beautifier = {
     const clangFormat = dependencies.get<ExecutableDependency>("ClangFormat");
     return generateConfigArgs(beautifierConfig).then(configArgs => {
       // tslint:disable-next-line no-console
-      console.log(`Using config: ${configArgs}`);
+      console.error(`Using config: ${configArgs}`);
       return clangFormat
         .run({
           args: [`-assume-filename=${filePath}`, ...configArgs],
