@@ -35,7 +35,7 @@
   "devDependencies": {
     "@types/jest": "23.3.1",
     "@types/cosmiconfig": "5.0.3",
-    "@types/node": "10.7.1",
+    "@types/node": "10.9.0",
     "@types/read-pkg-up": "3.0.1",
     "@types/tmp": "0.0.33",
     "jest": "23.5.0",
