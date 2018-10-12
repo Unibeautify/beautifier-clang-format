@@ -13,13 +13,13 @@ cache:
   directories:
     - node_modules
 addons:
-  apt:
-    packages:
-      - clang-format
   homebrew:
     packages:
       - clang-format
 before_script:
+  # clang-format is a "universe" package so it can't be installed via
+  # the Travis apt addon.
+  - if which apt-get; then sudo apt-get install clang-format; fi
   - OS_NAME=$(uname | tr A-Z a-z)
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-${OS_NAME}-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
