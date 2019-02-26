@@ -33,7 +33,7 @@
     "unibeautify": ">= 0.15.0"
   },
   "devDependencies": {
-    "@types/jest": "24.0.8",
+    "@types/jest": "24.0.9",
     "@types/cosmiconfig": "5.0.3",
     "@types/node": "10.12.24",
     "@types/read-pkg-up": "3.0.1",
