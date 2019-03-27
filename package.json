@@ -51,6 +51,6 @@
   "dependencies": {
     "cosmiconfig": "^5.0.5",
     "read-pkg-up": "^5.0.0",
-    "tmp": "0.0.33"
+    "tmp": "0.1.0"
   }
 }
