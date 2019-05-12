@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "cosmiconfig": "^5.0.5",
-    "read-pkg-up": "^5.0.0",
+    "read-pkg-up": "^6.0.0",
     "tmp": "0.1.0"
   }
 }
