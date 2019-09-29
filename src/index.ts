@@ -10,7 +10,7 @@ import * as fs from "fs";
 import * as path from "path";
 import cosmiconfig from "cosmiconfig";
 
-const pkg = readPkgUp.sync({ cwd: __dirname })!.package;
+const pkg = readPkgUp.sync({ cwd: __dirname })!.packageJson;
 
 export const beautifier: Beautifier = {
   name: "ClangFormat",
