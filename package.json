@@ -38,7 +38,7 @@
     "@types/node": "12.20.55",
     "@types/tmp": "0.1.0",
     "jest": "24.9.0",
-    "npm-run-all2": "5.0.0",
+    "npm-run-all2": "5.0.2",
     "rimraf": "3.0.2",
     "ts-jest": "24.3.0",
     "tslint": "5.20.1",
