@@ -11,17 +11,17 @@ os:
 osx_image: xcode9.4
 cache:
   directories:
-  - node_modules # NPM packages
+    - node_modules
+addons:
+  homebrew:
+    packages:
+      - clang-format
 before_script:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-      sudo apt-get install clang-format;
-      curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter;
-    elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      brew install clang-format;
-      curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-darwin-amd64 > ./cc-test-reporter;
-    else
-      echo Error:TRAVIS_OS_NAME && exit 1;
-    fi
+  # clang-format is a "universe" package so it can't be installed via
+  # the Travis apt addon.
+  - if which apt-get; then sudo apt-get install clang-format; fi
+  - OS_NAME=$(uname | tr A-Z a-z)
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-${OS_NAME}-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 script:
