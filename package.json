@@ -48,7 +48,7 @@
     "unibeautify": "0.17.1"
   },
   "dependencies": {
-    "cosmiconfig": "^5.0.5",
+    "cosmiconfig": "^9.0.0",
     "read-pkg-up": "^7.0.0",
     "tmp": "0.1.0"
   }
